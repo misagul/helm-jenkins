@@ -1,12 +1,7 @@
-mkdir /data
-mkdir /data/jenkins-volume
-sudo chown -R 1000:1000 /data/jenkins-volume
-helm repo add jenkinsci https://charts.jenkins.io
+helm repo add jenkins https://charts.jenkins.io
 helm repo update
 kubectl apply -f namespace.yaml
-kubectl apply -f jenkins-volume.yaml
-kubectl apply -f jenkins-sa.yaml
-helm install jenkins -n jenkins -f jenkins-values.yaml jenkinsci/jenkins
+helm install jenkins jenkins/jenkins -n jenkins -f values.yaml 
 echo "Waiting for the pod to be ready..."
 kubectl wait --for=condition=Ready --timeout=-1s $(kubectl get pods -n jenkins -o name | grep '^pod/jenkins') -n jenkins
 kubectl exec --namespace jenkins -it svc/jenkins -c jenkins -- /bin/cat /run/secrets/additional/chart-admin-password && echo
