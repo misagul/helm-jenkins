@@ -7,3 +7,5 @@ kubectl apply -f namespace.yaml
 kubectl apply -f jenkins-volume.yaml
 kubectl apply -f jenkins-sa.yaml
 helm install jenkins -n jenkins -f jenkins-values.yaml jenkinsci/jenkins
+echo "Waiting for the pod to be ready..."
+kubectl wait --for=condition=Ready $(kubectl get pods -n jenkins -o name | grep '^pod/jenkins') -n jenkins
